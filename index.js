@@ -3,6 +3,7 @@ import app from "./app.js";
 //All server functionality to be initialized here
 async function bootServer(PORT) {
   return app.listen(PORT, () => {
+    console.log(process.env.FIREBASE_PROJECT_ID);
     console.log(`Server is up on http://localhost:${PORT}`);
   });
 }
