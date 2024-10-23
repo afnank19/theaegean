@@ -11,3 +11,5 @@ async function bootServer(PORT) {
 const PORT = process.env.PORT || 3000;
 
 void bootServer(PORT);
+
+// Command to start the server from the terminal is => node --env-file ./src/secrets/.env index.js (NodeJS 20+ req)
