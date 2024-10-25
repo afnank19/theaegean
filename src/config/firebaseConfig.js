@@ -32,3 +32,4 @@ admin.initializeApp({
 });
 
 export const db = admin.firestore();
+export const adm = admin;

@@ -1,9 +1,9 @@
 import * as blogService from "../services/blogService.js";
 
 export const getAllBlogs = async (req, res) => {
-  console.log("UNIMPLEMENTED: Get all blogs on homepage");
+  const lastDocId = req.body.lastDocId; // Another way could using page=0 in the query and making it undefined then
 
-  const result = blogService.fetchAllBlogs();
+  const result = await blogService.fetchAllBlogs(lastDocId);
 
   res.json(result);
 };
@@ -11,24 +11,27 @@ export const getAllBlogs = async (req, res) => {
 export const postBlog = async (req, res) => {
   console.log("UNIMPLEMENTED: Post a blog");
 
-  // This needs to take userID parameter
+  // This needs to take blogRefID parameter
   const result = blogService.addBlogData();
 
   res.json(result);
 };
 
 export const getABlog = async (req, res) => {
-  console.log("UNIMPLEMENTED: Get a blog with a specific ID");
+  const blogContentId = req.params.id;
 
-  const result = blogService.fetchBlogContent();
+  const result = await blogService.fetchBlogContent(blogContentId);
 
   res.json(result);
 };
 
 export const deleteABlog = async (req, res) => {
   console.log("UNIMPLEMENTED: Delete a blog with a specific ID");
+  const blogMetaId = req.params.id;
+  const { blogContentId } = req.body;
 
-  const result = blogService.deleteBlogData();
+  // This needs to take blogRefID parameter
+  const result = await blogService.deleteBlogData(blogMetaId, blogContentId);
 
   res.json(result);
 };

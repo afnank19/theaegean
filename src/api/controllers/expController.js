@@ -1,4 +1,4 @@
-import { experimentingDoing } from "../services/expService.js";
+import { addTestData, experimentingDoing } from "../services/expService.js";
 
 export const doExperiment = async (req, res) => {
   console.log("Experimenting");
@@ -8,8 +8,10 @@ export const doExperiment = async (req, res) => {
   res.json({ message: result });
 };
 
-export const postExperiment = (req, res) => {
+export const postExperiment = async (req, res) => {
   console.log("Posting");
 
-  res.json({ msg: "life" });
+  await addTestData(req.body.title);
+
+  res.json({ msg: "posted TEST" });
 };

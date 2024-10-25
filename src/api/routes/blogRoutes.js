@@ -3,6 +3,8 @@ import * as blogController from "../controllers/blogController.js";
 
 const router = express.Router();
 
+// Always keep dynamic routes at the bottom!
+
 // this represents the endpoint : /api/blogs
 router.route("/").get(blogController.getAllBlogs).post(blogController.postBlog);
 
