@@ -1,5 +1,7 @@
 import { db } from "../../config/firebaseConfig.js";
 
+// TODO: Impl service for fetching using search, or for users
+
 // TODO: Implemenet pagination
 export const fetchAllBlogs = async (lastDocId) => {
   // Replace test with blogMeta
@@ -54,9 +56,11 @@ export const fetchBlogContent = async (blogContentId) => {
 
 // Data in the func name refers to both the
 // Content and the metadata
-// TODO: Refactor to use batch writes
 export const addBlogData = async (blogContent, blogMeta) => {
   const newBlogContentRef = "";
+
+  // this creates a document in the content collection
+  // which is referred by the meta collection.
   try {
     const newDocRef = await db.collection("blogContent").add(blogContent);
 
@@ -70,6 +74,7 @@ export const addBlogData = async (blogContent, blogMeta) => {
     return { msg: "error posting blog content" };
   }
 
+  // This attempts to create the meta document for the collection
   try {
     blogMeta = { ...blogMeta, blogRef: newBlogContentRef };
     const newDocRef = await db.collection("blogMeta").add(blogMeta);
@@ -78,6 +83,11 @@ export const addBlogData = async (blogContent, blogMeta) => {
   } catch (error) {
     // If this catch runs, delete the recently created blogContent document
     console.log(error);
+
+    const res = await db
+      .collection("blogContent")
+      .doc(newBlogContentRef)
+      .delete();
 
     return { msg: "error posting blog meta" };
   }
@@ -89,28 +99,20 @@ export const deleteBlogData = async (blogMetaId, blogContentId) => {
     "UNIMPLEMENTED: Delete blog content from the db along with the metadata"
   );
 
-  // Get blog contentId from blogMeta object
+  const batch = db.batch();
+
+  const delContentRef = db.collection("blogContent").doc(blogContentId);
+  batch.delete(delContentRef);
+
+  const delMetaRef = db.collection("blogMeta").doc(blogMetaId);
+  batch.delete(delMetaRef);
   try {
-    // const { blogContentId } = blogMeta;
-    const delDocRef = await db
-      .collection("blogContent")
-      .doc(blogContentId)
-      .delete();
+    await batch.commit();
+
+    return { msg: "DELETED" };
   } catch (error) {
-    // If error occurs here, return early and inform user
-    console.log(error);
+    console.error(error);
 
-    return { msg: "error deleting" };
+    return { msg: "ERROR" };
   }
-
-  try {
-    // const { blogMetaId } = blogMeta;
-
-    const delDocRef = await db.collection("blogMeta").doc(blogMetaId).delete();
-
-    return { msg: "Deleted Successfully" };
-  } catch (error) {
-    console.log(error);
-  }
-  return { msg: "DBD" };
 };
