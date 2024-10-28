@@ -12,7 +12,7 @@ export const postBlog = async (req, res) => {
   console.log("UNIMPLEMENTED: Post a blog");
 
   // This needs to take blogRefID parameter
-  const result = blogService.addBlogData();
+  const result = await blogService.addBlogData();
 
   res.json(result);
 };

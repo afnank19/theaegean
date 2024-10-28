@@ -8,9 +8,6 @@ function buildApp() {
 
   app.use(json());
 
-  //Example for an auth middleware to be applied to every route
-  // app.use(middle);
-
   loadRoutes(app);
 
   // Always add error handling middleware in the end

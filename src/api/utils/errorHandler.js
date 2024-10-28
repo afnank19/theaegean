@@ -8,3 +8,10 @@ export const errorHandler = (err, req, res, next) => {
     status: err.status || 500,
   });
 };
+
+export class AegeanError extends Error {
+  constructor(message, status) {
+    super(message);
+    this.status = status;
+  }
+}

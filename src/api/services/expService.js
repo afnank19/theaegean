@@ -1,4 +1,5 @@
 import { db, adm } from "../../config/firebaseConfig.js";
+import { AegeanError } from "../utils/errorHandler.js";
 
 export async function experimentingDoing() {
   try {
@@ -20,4 +21,19 @@ export const addTestData = async (title) => {
 
     const docRef = await db.collection("test").add(newTest);
   } catch (error) {}
+};
+
+export const throwErrorInSessionFunc = async () => {
+  // if (true) {
+  //   const error = new Error("bruh");
+  //   error.status = 400;
+  //   //throw error;
+  //   // next(error);
+  // }
+
+  try {
+    throw new AegeanError("Something went wrong ;(", 500);
+  } catch (err) {
+    throw err;
+  }
 };

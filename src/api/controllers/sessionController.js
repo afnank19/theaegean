@@ -1,10 +1,13 @@
 import { fetchAUserByEmail } from "../services/userService.js";
+import { throwErrorInSessionFunc } from "../services/expService.js";
+import { AegeanError } from "../utils/errorHandler.js";
 
 export const loginUser = async (req, res, next) => {
   try {
-    const error = new Error("bruh");
-    error.status = 404;
-    throw error;
+    if (!req.body.username) {
+      throw new AegeanError("No body provided", 400);
+    }
+    const res = await throwErrorInSessionFunc(next);
   } catch (error) {
     next(error);
   }
