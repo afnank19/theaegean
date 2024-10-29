@@ -1,6 +1,6 @@
 import { fetchAUserByEmail } from "../services/userService.js";
 import { throwErrorInSessionFunc } from "../services/expService.js";
-import { AegeanError } from "../utils/errorHandler.js";
+import { AegeanError } from "../middlewares/errorHandler.js";
 
 export const loginUser = async (req, res, next) => {
   try {

@@ -1,9 +1,9 @@
 import { db, adm } from "../../config/firebaseConfig.js";
-import { AegeanError } from "../utils/errorHandler.js";
+import { AegeanError } from "../middlewares/errorHandler.js";
 
 export async function experimentingDoing() {
   try {
-    const res = await db.collection("test").doc("ttw6dkpq5lwbcPDfFNFf").get();
+    const res = await db.collection("test").doc("AdjWA8NYiNFhfrbMJMBk").get();
 
     return res.data();
   } catch (error) {}

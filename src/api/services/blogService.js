@@ -2,7 +2,7 @@ import { db } from "../../config/firebaseConfig.js";
 
 // TODO: Impl service for fetching using search, or for users
 
-// TODO: Implemenet pagination
+// TODO: Implemenet pagination [X]
 export const fetchAllBlogs = async (lastDocId) => {
   // Replace test with blogMeta
   if (lastDocId == undefined) {
@@ -69,9 +69,7 @@ export const addBlogData = async (blogContent, blogMeta) => {
     // If error occurs here, we return and not add the blogMeta
     // inform the user
 
-    console.log(error);
-
-    return { msg: "error posting blog content" };
+    throw error;
   }
 
   // This attempts to create the meta document for the collection

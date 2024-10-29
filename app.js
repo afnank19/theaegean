@@ -1,6 +1,6 @@
 import express, { json } from "express";
 import loadRoutes from "./src/config/routeLoader.js";
-import { errorHandler } from "./src/api/utils/errorHandler.js";
+import { errorHandler } from "./src/api/middlewares/errorHandler.js";
 
 //All express initial middleware to go here
 function buildApp() {
