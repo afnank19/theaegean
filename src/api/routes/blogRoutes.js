@@ -1,9 +1,12 @@
-import express from "express";
+import { Router } from "express";
 import * as blogController from "../controllers/blogController.js";
 import { validateRequest } from "../middlewares/validateRequest.js";
-import { blogDataSchema } from "../utils/validationSchemas.js";
+import {
+  blogDataSchema,
+  deleteBlogSchema,
+} from "../utils/validationSchemas.js";
 
-const router = express.Router();
+const router = Router();
 
 // Always keep dynamic routes at the bottom!
 
@@ -17,6 +20,6 @@ router
 router
   .route("/:id")
   .get(blogController.getABlog)
-  .delete(blogController.deleteABlog);
+  .delete(validateRequest(deleteBlogSchema), blogController.deleteABlog);
 
 export default router;

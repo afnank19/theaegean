@@ -1,4 +1,5 @@
 import { db } from "../../config/firebaseConfig.js";
+import { AegeanError } from "../middlewares/errorHandler.js";
 
 // TODO: Impl service for fetching using search, or for users
 
@@ -6,10 +7,33 @@ import { db } from "../../config/firebaseConfig.js";
 export const fetchAllBlogs = async (lastDocId) => {
   // Replace test with blogMeta
   if (lastDocId == undefined) {
+    try {
+      const snapshot = await db
+        .collection("blogMeta")
+        .orderBy("postDate")
+        .limit(5)
+        .get();
+
+      const result = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      return result;
+    } catch (error) {
+      throw new AegeanError("Error fetching blogs for search", 500);
+    }
+  }
+  const lastDocSnap = await db.collection("test").doc(lastDocId).get();
+
+  // Repitition, could be function in a helpers file in utils folder.
+
+  try {
     const snapshot = await db
       .collection("blogMeta")
       .orderBy("postDate")
       .limit(5)
+      .startAfter(lastDocSnap)
       .get();
 
     const result = snapshot.docs.map((doc) => ({
@@ -18,23 +42,9 @@ export const fetchAllBlogs = async (lastDocId) => {
     }));
 
     return result;
+  } catch (error) {
+    throw new AegeanError("Error fetching blogs for search", 500);
   }
-  const lastDocSnap = await db.collection("test").doc(lastDocId).get();
-
-  // Repitition, could be function in a helpers file in utils folder.
-  const snapshot = await db
-    .collection("blogMeta")
-    .orderBy("postDate")
-    .limit(5)
-    .startAfter(lastDocSnap)
-    .get();
-
-  const result = snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
-
-  return result;
 };
 
 export const fetchBlogContent = async (blogContentId) => {
@@ -49,9 +59,8 @@ export const fetchBlogContent = async (blogContentId) => {
     return snapshot.data();
   } catch (error) {
     console.log(error);
+    throw new AegeanError("Error fetching blog data", 500);
   }
-
-  return { msg: "ERR" };
 };
 
 // Data in the func name refers to both the
@@ -69,7 +78,7 @@ export const addBlogData = async (blogContent, blogMeta) => {
     // If error occurs here, we return and not add the blogMeta
     // inform the user
 
-    throw error;
+    throw new AegeanError("Error adding blog content", 500);
   }
 
   // This attempts to create the meta document for the collection
@@ -111,6 +120,6 @@ export const deleteBlogData = async (blogMetaId, blogContentId) => {
   } catch (error) {
     console.error(error);
 
-    return { msg: "ERROR" };
+    throw new AegeanError("Error deleting blog data", 500);
   }
 };

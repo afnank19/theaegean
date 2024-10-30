@@ -1,4 +1,5 @@
 import { db } from "../../config/firebaseConfig.js";
+import { AegeanError } from "../middlewares/errorHandler.js";
 
 // Might cut this feature out for now, as it is currently
 // not planned to search the users collection
@@ -18,10 +19,11 @@ export const fetchAUser = async (userId) => {
   } catch (error) {
     console.error(error);
 
-    return { msg: "Failed to fetch user from db" };
+    throw new AegeanError("Failed to fetch user profile", 500);
   }
 };
 
+// The userData param is still undefined on how it is to be passed
 export const createUser = async (userData) => {
   console.log("UNIMPLEMENTED: Create the user in the db from the param data");
 
@@ -32,7 +34,7 @@ export const createUser = async (userData) => {
   } catch (error) {
     console.error(error);
 
-    return { msg: "error creating user in db" };
+    throw new AegeanError("Failed to create user profile", 500);
   }
 };
 
@@ -47,6 +49,6 @@ export const fetchAUserByEmail = async (userEmail) => {
   } catch (error) {
     console.error(error);
 
-    return { msg: "Failed to fetch user from db" };
+    throw new AegeanError("Failed to fetch user by email", 500);
   }
 };

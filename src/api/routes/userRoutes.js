@@ -1,9 +1,10 @@
-import express from "express";
+import { Router } from "express";
 import * as userController from "../controllers/userController.js";
 
-const router = express.Router();
+const router = Router();
 
 // Represents /api/users endpoint
+// TODO: Add a Joi schema for validating this POST body
 router.route("/").post(userController.registerAUser);
 
 // Represents /api/users/[userID] endpoint

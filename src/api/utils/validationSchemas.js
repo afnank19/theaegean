@@ -1,3 +1,5 @@
+// NOTE: Implement strong schemas
+
 import Joi from "joi";
 
 export const testSchema = Joi.object({
@@ -13,4 +15,8 @@ export const blogDataSchema = Joi.object({
   teaser: Joi.string().required(),
   timeToRead: Joi.string().required(),
   title: Joi.string().required(),
+});
+
+export const deleteBlogSchema = Joi.object({
+  blogContentId: Joi.string().required(),
 });
