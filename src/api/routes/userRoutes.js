@@ -11,4 +11,7 @@ router.route("/").post(userController.registerAUser);
 // Future ref: maybe add PUT/PATCH for update, and DELETE for deletion
 router.route("/:id").get(userController.getAUser);
 
+// /api/users/[userID]/saves
+router.route("/:id/saves").get(userController.getUserSavedBlogs);
+
 export default router;

@@ -20,3 +20,8 @@ export const blogDataSchema = Joi.object({
 export const deleteBlogSchema = Joi.object({
   blogContentId: Joi.string().required(),
 });
+
+export const loginSchema = Joi.object({
+  email: Joi.string().required(),
+  password: Joi.string().required(),
+});

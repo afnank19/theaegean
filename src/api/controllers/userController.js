@@ -11,15 +11,35 @@ export const getAllUsers = async (req, res, next) => {
 };
 
 export const getAUser = async (req, res, next) => {
-  console.log("UNIMPLEMENTED: Gets a users for profile");
+  console.log("UNIMPLEMENTED: Gets a users data for profile");
   try {
-    if (!req.params.userId) {
+    if (!req.params.id) {
       throw new AegeanError("No parameter provided", 400);
     }
 
-    const userId = req.params.userId;
+    const userId = req.params.id;
 
     const result = await userService.fetchAUser(userId);
+
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUserSavedBlogs = async (req, res, next) => {
+  console.log("UNIMPLEMENTED: Get a users blogs from a given id");
+
+  try {
+    if (!req.params.id) {
+      throw new AegeanError("No parameter provided", 400);
+    }
+
+    const userId = req.params.id;
+
+    const { lastDocId } = req.query; // Send request even if undefined
+
+    const result = await userService.fetchUserSavedBlogs(userId, lastDocId);
 
     res.json(result);
   } catch (error) {

@@ -4,9 +4,17 @@
 
 import { Router } from "express";
 import * as sessionController from "../controllers/sessionController.js";
+import { validateRequest } from "../middlewares/validateRequest.js";
+import { loginSchema } from "../utils/validationSchemas.js";
+import { checkUserSessionAuth } from "../middlewares/auth.js";
 
 const router = Router();
 
-router.route("/").post(sessionController.loginUser);
+// The GET request will get the session on first page load to persist session
+router
+  .route("/")
+  .post(validateRequest(loginSchema), sessionController.loginUser);
+
+router.route("/token").get(checkUserSessionAuth, sessionController.getNewToken);
 
 export default router;

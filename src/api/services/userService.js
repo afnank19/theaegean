@@ -13,6 +13,7 @@ export const fetchAUser = async (userId) => {
   console.log("UNIMPLEMENTED: Fetch a user from the database with the UserId");
 
   try {
+    // Dont sen d all the data back
     const snapshot = await db.collection("user").doc(userId).get();
 
     return snapshot.data();
@@ -20,6 +21,50 @@ export const fetchAUser = async (userId) => {
     console.error(error);
 
     throw new AegeanError("Failed to fetch user profile", 500);
+  }
+};
+
+// This has to be paginated
+export const fetchUserSavedBlogs = async (userId, lastDocId) => {
+  if (lastDocId == undefined) {
+    try {
+      const snapshot = await db
+        .collection("user")
+        .doc(userId)
+        .collection("savedBlogs")
+        .orderBy("postDate")
+        .limit(5)
+        .get();
+
+      const result = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      return result;
+    } catch (error) {
+      throw new AegeanError("Failed to fetch users saved blogs", 500);
+    }
+  }
+
+  try {
+    const snapshot = await db
+      .collection("user")
+      .doc(userId)
+      .collection("savedBlogs")
+      .orderBy("postDate")
+      .limit(5)
+      .startAfter(lastDocId)
+      .get();
+
+    const result = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    return result;
+  } catch (error) {
+    throw new AegeanError("Failed to fetch users saved blogs", 500);
   }
 };
 
@@ -50,5 +95,26 @@ export const fetchAUserByEmail = async (userEmail) => {
     console.error(error);
 
     throw new AegeanError("Failed to fetch user by email", 500);
+  }
+};
+
+// Each email should be unique
+export const validateUserCredentials = async (email, pasword) => {
+  try {
+    const snapshot = await db
+      .collection("user")
+      .where("email", "==", email)
+      .get();
+
+    // Process user data
+    const userData = snapshot.docs[0].data();
+
+    // TODO: Hash the current password with the salt from the data, and them compare
+    // with the hashed password.
+
+    // Only return the ID when passwords match
+    return snapshot.docs[0].id;
+  } catch (error) {
+    throw new AegeanError("Couldn't verify email or password", 500);
   }
 };
