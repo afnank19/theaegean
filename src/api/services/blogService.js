@@ -24,7 +24,7 @@ export const fetchAllBlogs = async (lastDocId) => {
       throw new AegeanError("Error fetching blogs for search", 500);
     }
   }
-  const lastDocSnap = await db.collection("test").doc(lastDocId).get();
+  const lastDocSnap = await db.collection("blogMeta").doc(lastDocId).get();
 
   // Repitition, could be function in a helpers file in utils folder.
 
@@ -86,7 +86,7 @@ export const addBlogData = async (blogContent, blogMeta) => {
     blogMeta = { ...blogMeta, blogRef: newBlogContentRef };
     const newDocRef = await db.collection("blogMeta").add(blogMeta);
 
-    return { msg: "Successfully Posted" };
+    return { message: "Successfully Posted" };
   } catch (error) {
     // If this catch runs, delete the recently created blogContent document
     console.log(error);
@@ -96,7 +96,7 @@ export const addBlogData = async (blogContent, blogMeta) => {
       .doc(newBlogContentRef)
       .delete();
 
-    return { msg: "error posting blog meta" };
+    throw new AegeanError("Error adding blog metadata, please try again", 500);
   }
 };
 
@@ -116,7 +116,7 @@ export const deleteBlogData = async (blogMetaId, blogContentId) => {
   try {
     await batch.commit();
 
-    return { msg: "DELETED" };
+    return { message: "Delete operation successful" };
   } catch (error) {
     console.error(error);
 

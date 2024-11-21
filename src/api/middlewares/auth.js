@@ -41,6 +41,7 @@ export const checkUserSessionAuth = (req, res, next) => {
       throw new AegeanError("Improper request credentials", 400);
     }
 
+    // This need to be checked with the actual string
     if (_c_hdr != "lou") {
       throw new AegeanError("Couldn't verify request credentials", 401);
     }

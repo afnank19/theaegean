@@ -14,7 +14,10 @@ export const validateRequest = (schema) => {
     if (error) {
       // Throw an error here;
       // Probably pass it to error middleware
-      const err = new AegeanError("Invalid Body", 400);
+      const err = new AegeanError(
+        "Missing options for the current action",
+        400
+      );
       return next(err);
 
       // Temporary

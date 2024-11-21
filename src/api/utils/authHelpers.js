@@ -9,7 +9,5 @@ export const createAndSignTokens = (payload) => {
     expiresIn: "2min",
   });
 
-  // const tokens = { aToken, rToken };
-
   return { aToken, rToken };
 };

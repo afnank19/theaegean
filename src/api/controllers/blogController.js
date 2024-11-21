@@ -53,27 +53,23 @@ export const postBlog = async (req, res, next) => {
 
 export const getABlog = async (req, res, next) => {
   try {
-    // This should never by called because we have a GET req for /blogs
-    // without the id but in case
+    // This if should never be true because we have a GET req for /blogs
+    // without the id but in case.
     if (!req.params.id) {
-      throw new AegeanError("ID parameter required", 400);
+      throw new AegeanError("Missing params, check your request", 400);
     }
     const blogContentId = req.params.id;
 
     const result = await blogService.fetchBlogContent(blogContentId);
+
+    res.json(result);
   } catch (error) {
     next(error);
   }
-
-  res.json(result);
 };
 
 export const deleteABlog = async (req, res, next) => {
   try {
-    if (!req.body.blogContentId) {
-      throw new AegeanError("Content ID required", 400);
-    }
-
     const blogMetaId = req.params.id;
     const { blogContentId } = req.body;
 
