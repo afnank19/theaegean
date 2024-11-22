@@ -8,7 +8,14 @@ export const getAllBlogs = async (req, res, next) => {
     // If undefined, we still call the service because that is the first request
     // GET requests have no body thus no body validation middleware checks
 
-    const result = await blogService.fetchAllBlogs(lastDocId);
+    const searchQuery = req.query.search;
+    const filter = req.query.filter;
+
+    const result = await blogService.fetchAllBlogs(
+      lastDocId,
+      searchQuery,
+      filter
+    );
 
     res.json(result);
   } catch (error) {
@@ -19,22 +26,13 @@ export const getAllBlogs = async (req, res, next) => {
 export const postBlog = async (req, res, next) => {
   try {
     // This could be made simpler by having blogMeta be a nested JS Obj
-    // in the request itself. But this works too for now, and doesn't hurt readabity
-    const {
-      author,
-      blogRef,
-      content,
-      imgUrl,
-      school,
-      teaser,
-      timeToRead,
-      title,
-    } = req.body;
+    // in the request itself. But this works too for now, and doesn't hurt readability
+    const { author, content, imgUrl, school, teaser, timeToRead, title } =
+      req.body;
 
     const blogContent = content;
     const blogMeta = {
       author,
-      blogRef,
       imgUrl,
       school,
       teaser,

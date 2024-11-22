@@ -1,11 +1,15 @@
 import { Router } from "express";
 import * as userController from "../controllers/userController.js";
+import { validateRequest } from "../middlewares/validateRequest.js";
+import { registerUserSchema } from "../utils/validationSchemas.js";
 
 const router = Router();
 
 // Represents /api/users endpoint
 // TODO: Add a Joi schema for validating this POST body
-router.route("/").post(userController.registerAUser);
+router
+  .route("/")
+  .post(validateRequest(registerUserSchema), userController.registerAUser);
 
 // Represents /api/users/[userID] endpoint
 // Future ref: maybe add PUT/PATCH for update, and DELETE for deletion

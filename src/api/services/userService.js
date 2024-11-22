@@ -10,13 +10,20 @@ export const fetchAllUsers = async () => {
 };
 
 export const fetchAUser = async (userId) => {
-  console.log("UNIMPLEMENTED: Fetch a user from the database with the UserId");
-
   try {
     // Dont sen d all the data back
     const snapshot = await db.collection("user").doc(userId).get();
 
-    return snapshot.data();
+    const userData = snapshot.data();
+
+    // Only send the data that is needed
+    const user = {
+      name: userData.name,
+      campus: userData.campus,
+      about: userData.campus,
+    };
+
+    return user;
   } catch (error) {
     console.error(error);
 
@@ -99,7 +106,9 @@ export const fetchAUserByEmail = async (userEmail) => {
 };
 
 // Each email should be unique
-export const validateUserCredentials = async (email, pasword) => {
+// Maybe change the name, this service function returns the requested
+// users id and hash
+export const validateUserCredentials = async (email) => {
   try {
     const snapshot = await db
       .collection("user")
@@ -110,10 +119,10 @@ export const validateUserCredentials = async (email, pasword) => {
     const userData = snapshot.docs[0].data();
 
     // TODO: Hash the current password with the salt from the data, and them compare
-    // with the hashed password.
+    // with the hashed password. ( Moved to controller layer )
+    const userCredentials = { id: snapshot.docs[0].id, hash: userData.hash };
 
-    // Only return the ID when passwords match
-    return snapshot.docs[0].id;
+    return userCredentials;
   } catch (error) {
     throw new AegeanError("Couldn't verify email or password", 500);
   }

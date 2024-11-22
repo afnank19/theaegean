@@ -1,5 +1,7 @@
 import { validateUserCredentials } from "../services/userService.js";
 import * as sessionService from "../services/sessionService.js";
+import { verifyPassword } from "../utils/authHelpers.js";
+import { AegeanError } from "../middlewares/errorHandler.js";
 
 // TODO: Bad auth ratelimiting
 export const loginUser = async (req, res, next) => {
@@ -7,10 +9,16 @@ export const loginUser = async (req, res, next) => {
     const { email, password } = req.body;
 
     // Result is the ID of the user
-    const result = await validateUserCredentials(email, password);
+    const result = await validateUserCredentials(email);
+
+    const isMatch = await verifyPassword(password, result.hash);
+
+    if (!isMatch) {
+      throw new AegeanError("Credentials did not match", 401);
+    }
 
     // TODO: Generate new tokens from the result [X]
-    const tokens = sessionService.generateNewTokens(result);
+    const tokens = sessionService.generateNewTokens(result.id);
 
     // TODO: Improve the security of the cookie ( Secure bullshit )
     // res.cookie("accessToken", tokens.aToken, { httpOnly: false });
@@ -27,7 +35,7 @@ export const loginUser = async (req, res, next) => {
     // TODO: Send Id aswell dummy [X]
     // Current impl only for dev, CSRF token may be RNG or signed JWT which could be refreshed
     const payload = {
-      id: result,
+      id: result.id,
       aTkn: tokens.aToken,
       r_surf: "okl",
     };
@@ -39,11 +47,19 @@ export const loginUser = async (req, res, next) => {
 };
 
 export const getNewToken = async (req, res, next) => {
-  console.log("UNIMPLEMENTED: Get a new token from the session service");
-
   try {
-    // Probably need a userId in the request
-    // generateNewTokens();
+    const refreshToken = req.cookies.refreshToken;
+
+    const decoded = jwt.verify(refreshToken, process.env.R_TOKEN_KEY);
+
+    const tokens = sessionService.generateNewTokens(decoded.id);
+
+    res.cookie("refreshToken", tokens.rToken, { httpOnly: true });
+
+    const payload = {
+      id: decoded.id,
+      aTkn: tokens.aToken,
+    };
   } catch (error) {
     next(error);
   }

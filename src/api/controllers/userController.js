@@ -1,6 +1,7 @@
 import { AegeanError } from "../middlewares/errorHandler.js";
 import * as userService from "../services/userService.js";
 import { generateNewTokens } from "../services/sessionService.js";
+import { generateHashAndSalt } from "../utils/authHelpers.js";
 
 // This functionality may be removed
 export const getAllUsers = async (req, res, next) => {
@@ -12,7 +13,6 @@ export const getAllUsers = async (req, res, next) => {
 };
 
 export const getAUser = async (req, res, next) => {
-  console.log("UNIMPLEMENTED: Gets a users data for profile");
   try {
     if (!req.params.id) {
       throw new AegeanError("No parameter provided", 400);
@@ -29,8 +29,6 @@ export const getAUser = async (req, res, next) => {
 };
 
 export const getUserSavedBlogs = async (req, res, next) => {
-  console.log("UNIMPLEMENTED: Get a users blogs from a given id");
-
   try {
     if (!req.params.id) {
       throw new AegeanError("No parameter provided", 400);
@@ -49,18 +47,21 @@ export const getUserSavedBlogs = async (req, res, next) => {
 };
 
 export const registerAUser = async (req, res, next) => {
-  console.log(
-    "UNIMPLEMENTED: Registers a user, and provides them with the tokens"
-  );
-
   try {
-    // This body needs to be validated against a schema
+    // This body needs to be validated against a schema [X]
     const { name, email, password, campus, about, cms } = req.body;
 
     // TODO: Add password salting, hashing, and add salt field to
-    // userData
-    const userData = { name, email, password, campus, about, cms };
-
+    // userData [X]
+    const hash = generateHashAndSalt(password);
+    const userData = {
+      name: name,
+      email: email,
+      hash: hash,
+      campus: campus,
+      about: about,
+      cms: cms,
+    };
     const newUserId = await userService.createUser(userData);
 
     // TODO: Add authentication afterwards with the id with JWTs

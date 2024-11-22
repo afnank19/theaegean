@@ -6,7 +6,10 @@ import { Router } from "express";
 import * as sessionController from "../controllers/sessionController.js";
 import { validateRequest } from "../middlewares/validateRequest.js";
 import { loginSchema } from "../utils/validationSchemas.js";
-import { checkUserSessionAuth } from "../middlewares/auth.js";
+import {
+  checkUserRefreshAuth,
+  checkUserSessionAuth,
+} from "../middlewares/auth.js";
 
 const router = Router();
 
@@ -15,6 +18,7 @@ router
   .route("/")
   .post(validateRequest(loginSchema), sessionController.loginUser);
 
-router.route("/token").get(checkUserSessionAuth, sessionController.getNewToken);
+// Refresh token endpoint
+router.route("/token").get(checkUserRefreshAuth, sessionController.getNewToken);
 
 export default router;

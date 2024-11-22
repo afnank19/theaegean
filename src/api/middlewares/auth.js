@@ -110,6 +110,7 @@ const validateSurf = (_r_surf) => {
     throw new AegeanError("Improper request credentials", 400);
   }
 
+  // TODO: Verify against actual secret
   if (_r_surf != "okl") {
     throw new AegeanError("Couldn't verify request credentials", 401);
   }
