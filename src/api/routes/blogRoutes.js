@@ -1,6 +1,7 @@
 import { Router } from "express";
 import * as blogController from "../controllers/blogController.js";
 import { validateRequest } from "../middlewares/validateRequest.js";
+import { checkUserAuthBasic } from "../middlewares/auth.js";
 import {
   blogDataSchema,
   deleteBlogSchema,
@@ -13,13 +14,21 @@ const router = Router();
 // this represents the endpoint : /api/blogs
 router
   .route("/")
-  .get(blogController.getAllBlogs)
-  .post(validateRequest(blogDataSchema), blogController.postBlog);
+  .get(checkUserAuthBasic, blogController.getAllBlogs)
+  .post(
+    checkUserAuthBasic,
+    validateRequest(blogDataSchema),
+    blogController.postBlog
+  );
 
 // this represents the enpoint : /api/blogs/:id
 router
   .route("/:id")
-  .get(blogController.getABlog)
-  .delete(validateRequest(deleteBlogSchema), blogController.deleteABlog);
+  .get(checkUserAuthBasic, blogController.getABlog)
+  .delete(
+    checkUserAuthBasic,
+    validateRequest(deleteBlogSchema),
+    blogController.deleteABlog
+  );
 
 export default router;

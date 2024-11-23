@@ -45,6 +45,10 @@ export const fetchAllBlogs = async (lastDocId, searchQuery, filter) => {
           .limit(5)
           .get();
 
+        // if (snapshot.empty) {
+        //   return {};
+        // }
+
         result = snapshotMapToResult(snapshot);
         return result;
       }
@@ -58,6 +62,7 @@ export const fetchAllBlogs = async (lastDocId, searchQuery, filter) => {
       result = snapshotMapToResult(snapshot);
       return result;
     } catch (error) {
+      console.error(error);
       throw new AegeanError("Error fetching blogs for search", 500);
     }
   }
@@ -134,26 +139,29 @@ function snapshotMapToResult(snapshot) {
 // Data in the func name refers to both the
 // Content and the metadata
 export const addBlogData = async (blogContent, blogMeta) => {
-  const newBlogContentRef = "";
+  let newBlogContentRef = "";
 
   // this creates a document in the content collection
   // which is referred by the meta collection.
   try {
-    const blogMetaData = {
+    let blogData = {
       title: blogMeta.title,
       author: blogMeta.author,
       timeToRead: blogMeta.timeToRead,
       postDate: blogMeta.postDate,
+      content: blogContent,
     };
 
-    blogContent = { blogMetaData, ...blogContent };
+    //blogContent = { blogMetaData, blogContent };
+    console.log(blogData);
 
-    const newDocRef = await db.collection("blogContent").add(blogContent);
+    const newDocRef = await db.collection("blogContent").add(blogData);
 
     newBlogContentRef = newDocRef.id;
   } catch (error) {
     // If error occurs here, we return and not add the blogMeta
     // inform the user
+    console.log(error);
 
     throw new AegeanError("Error adding blog content", 500);
   }
@@ -181,13 +189,17 @@ export const fetchBlogContent = async (blogRef) => {
   try {
     const snapshot = await db.collection("blogContent").doc(blogRef).get();
 
+    if (!snapshot.exists) {
+      throw new AegeanError("No Blog found", 500);
+    }
+
     return snapshot.data();
   } catch (error) {
     throw new AegeanError("Failed to fetch blog content", 500);
   }
 };
 
-//TODO: Refactor to use batch deletes
+//TODO: Refactor to use batch deletes [X]
 export const deleteBlogData = async (blogMetaId, blogContentId) => {
   const batch = db.batch();
 

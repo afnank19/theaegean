@@ -9,6 +9,11 @@ export const fetchAllUsers = async () => {
   return { msg: "FAU" };
 };
 
+/**
+ *
+ * @param {*} userId
+ * @returns
+ */
 export const fetchAUser = async (userId) => {
   try {
     // Dont sen d all the data back
@@ -32,6 +37,12 @@ export const fetchAUser = async (userId) => {
 };
 
 // This has to be paginated
+/**
+ *
+ * @param {*} userId
+ * @param {*} lastDocId - id used as a cursor for pagination
+ * @returns
+ */
 export const fetchUserSavedBlogs = async (userId, lastDocId) => {
   if (lastDocId == undefined) {
     try {
@@ -76,6 +87,11 @@ export const fetchUserSavedBlogs = async (userId, lastDocId) => {
 };
 
 // The userData param is still undefined on how it is to be passed
+/**
+ *
+ * @param {*} userData - contains all necessary data in object format for creating a user
+ * @returns
+ */
 export const createUser = async (userData) => {
   console.log("UNIMPLEMENTED: Create the user in the db from the param data");
 
@@ -108,6 +124,11 @@ export const fetchAUserByEmail = async (userEmail) => {
 // Each email should be unique
 // Maybe change the name, this service function returns the requested
 // users id and hash
+/**
+ *
+ * @param {*} email
+ * @returns
+ */
 export const validateUserCredentials = async (email) => {
   try {
     const snapshot = await db

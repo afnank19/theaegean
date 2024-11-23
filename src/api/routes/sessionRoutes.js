@@ -14,6 +14,7 @@ import {
 const router = Router();
 
 // The GET request will get the session on first page load to persist session
+// TODO: Bad auth ratelimiting to protect this endpoint
 router
   .route("/")
   .post(validateRequest(loginSchema), sessionController.loginUser);

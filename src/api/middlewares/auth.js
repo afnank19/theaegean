@@ -3,24 +3,14 @@ import { AegeanError } from "./errorHandler.js";
 
 // For all resource reqs
 export const checkUserAuthBasic = (req, res, next) => {
-  // Lets get down the steps on how we are going to tackle this
-
-  // 1. First thing, verify aToken, this can be valid, or expired
-  // if passed then call next(), if failed, check error,
-  // if jwt expired, this means jwt was ours, if jwt signed error, this means
-  // some fucking bastard is attemtping to hack! return early.
-  // if jwt ours, then check for refresh token in a function.
-  // Now if refresh token is valid, then we have to generate new tokens,
-  // Problem is what would be the best way to send the tokens back
-
-  const accessToken = req.headers.authorization.split(" ")[1];
-  const _r_surf = req.headers["x-surf"]; // keep it all small letters, regardles of how headers sent
-
   try {
+    const accessToken = req.headers.authorization.split(" ")[1];
+    const _r_surf = req.headers["x-surf"]; // keep it all small letters, regardles of how headers sent
     validateSurf(_r_surf);
 
     const decoded = jwt.verify(accessToken, process.env.A_TOKEN_KEY);
 
+    req.id = decoded.id;
     next();
   } catch (error) {
     if (error.message == "jwt expired") {
@@ -41,7 +31,7 @@ export const checkUserSessionAuth = (req, res, next) => {
       throw new AegeanError("Improper request credentials", 400);
     }
 
-    // This need to be checked with the actual string
+    // This need to be checked with the actual string in secret env var
     if (_c_hdr != "lou") {
       throw new AegeanError("Couldn't verify request credentials", 401);
     }

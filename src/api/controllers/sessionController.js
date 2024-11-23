@@ -2,13 +2,25 @@ import { validateUserCredentials } from "../services/userService.js";
 import * as sessionService from "../services/sessionService.js";
 import { verifyPassword } from "../utils/authHelpers.js";
 import { AegeanError } from "../middlewares/errorHandler.js";
+import jwt from "jsonwebtoken";
 
 // TODO: Bad auth ratelimiting
+
+/**
+ * This takes the email, calls a user service to retrieve the users id, and hash
+ * It then calls a verifyPassword function on the provided password and hash
+ * for verification, if verified, the new token are generated, a payload is created,
+ * cookies are set and sent to the user.
+ *
+ * @param {*} req.body - contains the email and password for login
+ * @param {*} res
+ * @param {*} next
+ */
 export const loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // Result is the ID of the user
+    // Result is the ID + Hash object of the user
     const result = await validateUserCredentials(email);
 
     const isMatch = await verifyPassword(password, result.hash);
@@ -46,6 +58,13 @@ export const loginUser = async (req, res, next) => {
   }
 };
 
+/**
+ * This function decodes the refresh token, gets the id, generates new tokens
+ * and sends them back to the user
+ * @param {*} req.cookies.refreshToken - refresh token sent by the client to be decoded for id
+ * @param {*} res
+ * @param {*} next
+ */
 export const getNewToken = async (req, res, next) => {
   try {
     const refreshToken = req.cookies.refreshToken;
@@ -60,6 +79,8 @@ export const getNewToken = async (req, res, next) => {
       id: decoded.id,
       aTkn: tokens.aToken,
     };
+
+    res.json(payload);
   } catch (error) {
     next(error);
   }

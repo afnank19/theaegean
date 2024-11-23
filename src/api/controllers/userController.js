@@ -12,6 +12,14 @@ export const getAllUsers = async (req, res, next) => {
   res.json(result);
 };
 
+/**
+ * Takes a user id and calls a user service function to fetch the user
+ * data and sends it back
+ *
+ * @param {*} req.params.id - user id from the route parameters
+ * @param {*} res - express response object
+ * @param {*} next - middleware func to call with error on error
+ */
 export const getAUser = async (req, res, next) => {
   try {
     if (!req.params.id) {
@@ -28,6 +36,13 @@ export const getAUser = async (req, res, next) => {
   }
 };
 
+/**
+ * Gets a users saved blogs by calling the respective service with the userId from the params
+ *
+ * @param {*} req.query - can contain or not contain lastDocId which can be used as a cursor for pagination
+ * @param {*} res
+ * @param {*} next
+ */
 export const getUserSavedBlogs = async (req, res, next) => {
   try {
     if (!req.params.id) {
@@ -46,6 +61,18 @@ export const getUserSavedBlogs = async (req, res, next) => {
   }
 };
 
+/**
+ * This function deconstructs the user data from req.body, takes the password and
+ * hashes it using bcrpyt, then creates a new userData object with the hash,
+ * and calls the service for creating a usre with that userData
+ * This returns the newly formed users id, which is then sent to
+ * a function as params to create JWT tokens for auth.
+ * The tokens are set in a cookie and payload respectively and returned
+ *
+ * @param {*} req.body - contains all parameters required to register a user
+ * @param {*} res - express response object
+ * @param {*} next - middleware function to be called with error param on error
+ */
 export const registerAUser = async (req, res, next) => {
   try {
     // This body needs to be validated against a schema [X]
@@ -53,7 +80,7 @@ export const registerAUser = async (req, res, next) => {
 
     // TODO: Add password salting, hashing, and add salt field to
     // userData [X]
-    const hash = generateHashAndSalt(password);
+    const hash = await generateHashAndSalt(password);
     const userData = {
       name: name,
       email: email,
