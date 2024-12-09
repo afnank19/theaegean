@@ -5,6 +5,11 @@ import { AegeanError } from "./errorHandler.js";
 export const checkUserAuthBasic = (req, res, next) => {
   try {
     const accessToken = req.headers.authorization.split(" ")[1];
+
+    if (accessToken === undefined) {
+      throw new AegeanError("No credentials provided", 401);
+    }
+
     const _r_surf = req.headers["x-surf"]; // keep it all small letters, regardles of how headers sent
     validateSurf(_r_surf);
 

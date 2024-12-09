@@ -17,6 +17,7 @@ const router = Router();
 // TODO: Bad auth ratelimiting to protect this endpoint
 router
   .route("/")
+  .get(checkUserSessionAuth, sessionController.getNewToken)
   .post(validateRequest(loginSchema), sessionController.loginUser);
 
 // Refresh token endpoint

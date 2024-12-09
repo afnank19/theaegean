@@ -40,7 +40,11 @@ export const loginUser = async (req, res, next) => {
     // Might not go along with the above decision, because honestly,
     // what even is Auth??? What even is security???
     // We need new browser standards :(
-    res.cookie("refreshToken", tokens.rToken, { httpOnly: true });
+    res.cookie("refreshToken", tokens.rToken, {
+      httpOnly: true,
+      sameSite: "Strict",
+      maxAge: 365 * 24 * 60 * 60 * 1000,
+    });
 
     // TODO: Send AToken directly to the user, not in the cookie [X]
     // TODO: Generate an anti CSRF token and send on login

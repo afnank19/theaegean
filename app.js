@@ -2,11 +2,13 @@ import express, { json } from "express";
 import loadRoutes from "./src/config/routeLoader.js";
 import { errorHandler } from "./src/api/middlewares/errorHandler.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 //All express initial middleware to go here
 function buildApp() {
   const app = express();
 
+  app.use(cors({ origin: "http://localhost:5173", credentials: true }));
   app.use(json());
   app.use(cookieParser());
 
