@@ -20,6 +20,7 @@ export const getAllUsers = async (req, res, next) => {
  * @param {*} res - express response object
  * @param {*} next - middleware func to call with error on error
  */
+// TODO: Add authorization to match tokenID with params
 export const getAUser = async (req, res, next) => {
   try {
     if (!req.params.id) {
@@ -76,8 +77,14 @@ export const getUserSavedBlogs = async (req, res, next) => {
 export const registerAUser = async (req, res, next) => {
   try {
     // This body needs to be validated against a schema [X]
-    const { name, email, password, campus, about, cms } = req.body;
+    const { name, email, password, campus, cms } = req.body;
 
+    const userExists = await userService.fetchAUserByEmail(email);
+
+    // console.log(userExists);
+    if (userExists) {
+      throw new AegeanError("User already exists for current email", 500);
+    }
     // TODO: Add password salting, hashing, and add salt field to
     // userData [X]
     const hash = await generateHashAndSalt(password);
@@ -86,7 +93,6 @@ export const registerAUser = async (req, res, next) => {
       email: email,
       hash: hash,
       campus: campus,
-      about: about,
       cms: cms,
     };
     const newUserId = await userService.createUser(userData);
@@ -95,7 +101,11 @@ export const registerAUser = async (req, res, next) => {
     // to send the tokens back to the user [X]
     const tokens = generateNewTokens(newUserId);
 
-    res.cookie("refreshToken", tokens.rToken, { httpOnly: true });
+    res.cookie("refreshToken", tokens.rToken, {
+      httpOnly: true,
+      sameSite: "Strict",
+      maxAge: 365 * 24 * 60 * 60 * 1000,
+    });
 
     // TODO: Send AToken directly to the user, not in the cookie [X]
     // TODO: Generate an anti CSRF token and send on login

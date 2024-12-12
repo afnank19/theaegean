@@ -25,7 +25,7 @@ export const fetchAUser = async (userId) => {
     const user = {
       name: userData.name,
       campus: userData.campus,
-      about: userData.campus,
+      about: userData.about,
     };
 
     return user;
@@ -113,7 +113,12 @@ export const fetchAUserByEmail = async (userEmail) => {
       .where("email", "==", userEmail)
       .get();
 
-    return snapshot[0].data();
+    // console.log(snapshot);
+    if (!snapshot.empty) {
+      return true;
+    }
+
+    return false;
   } catch (error) {
     console.error(error);
 

@@ -32,6 +32,5 @@ export const registerUserSchema = Joi.object({
   email: Joi.string().required(),
   password: Joi.string().required(),
   campus: Joi.string().required(),
-  about: Joi.string().required(),
   cms: Joi.string().required(),
 });

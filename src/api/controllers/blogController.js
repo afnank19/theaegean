@@ -17,12 +17,14 @@ export const getAllBlogs = async (req, res, next) => {
     const searchQuery = req.query.search;
     const filter = req.query.filter;
 
+    // console.log("THIS+> " + searchQuery);
     const result = await blogService.fetchAllBlogs(
       lastDocId,
       searchQuery,
-      filter
+      filter,
     );
 
+    // console.log(result);
     res.json(result);
   } catch (error) {
     next(error);
