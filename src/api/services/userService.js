@@ -146,7 +146,11 @@ export const validateUserCredentials = async (email) => {
 
     // TODO: Hash the current password with the salt from the data, and them compare
     // with the hashed password. ( Moved to controller layer )
-    const userCredentials = { id: snapshot.docs[0].id, hash: userData.hash };
+    const userCredentials = {
+      id: snapshot.docs[0].id,
+      hash: userData.hash,
+      name: userData.name,
+    };
 
     return userCredentials;
   } catch (error) {

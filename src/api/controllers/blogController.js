@@ -1,5 +1,6 @@
 import { AegeanError } from "../middlewares/errorHandler.js";
 import * as blogService from "../services/blogService.js";
+import jwt from "jsonwebtoken";
 
 /**
  * Can have lastDocId, searchQuery, filter or not. Fetches the blogs from the service
@@ -44,37 +45,39 @@ export const postBlog = async (req, res, next) => {
     // This could be made simpler by having blogMeta be a nested JS Obj
     // in the request itself. But this works too for now, and doesn't hurt readability
     const {
-      author,
       authorId,
       content,
       imgUrl,
-      school,
       teaser,
+      tag,
       timeToRead,
       title,
-      postDate,
+      displayDate,
     } = req.body;
 
-    const tknId = req.id;
-    // This shouldnt happen
-    if (tknId == undefined) {
-      throw new AegeanError("Something went wrong, auth failed", 500);
+    // Decode author name from token, and match decoded id with bodyid
+    const accessToken = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(accessToken, process.env.A_TOKEN_KEY);
+
+    if (authorId != decoded.id) {
+      throw new AegeanError(
+        "Unauthorized post attempt, please check your credentials",
+        401,
+      );
     }
 
-    if (tknId != authorId) {
-      throw new AegeanError("Unauthorized action attempted", 401);
-    }
+    const author = decoded.name;
 
     const blogContent = content;
     const blogMeta = {
       author,
       authorId,
       imgUrl,
-      school,
       teaser,
+      tag,
       timeToRead,
       title,
-      postDate,
+      displayDate,
     };
 
     // This needs to take blogContent, blogMeta parameter

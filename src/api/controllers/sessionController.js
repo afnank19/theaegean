@@ -30,7 +30,10 @@ export const loginUser = async (req, res, next) => {
     }
 
     // TODO: Generate new tokens from the result [X]
-    const tokens = sessionService.generateNewTokens(result.id);
+    const tokens = sessionService.generateNewTokens({
+      id: result.id,
+      name: result.name,
+    });
 
     // TODO: Improve the security of the cookie ( Secure bullshit )
     // res.cookie("accessToken", tokens.aToken, { httpOnly: false });
@@ -75,7 +78,10 @@ export const getNewToken = async (req, res, next) => {
 
     const decoded = jwt.verify(refreshToken, process.env.R_TOKEN_KEY);
 
-    const tokens = sessionService.generateNewTokens(decoded.id);
+    const tokens = sessionService.generateNewTokens({
+      id: decoded.id,
+      name: decoded.name,
+    });
 
     res.cookie("refreshToken", tokens.rToken, { httpOnly: true });
 
