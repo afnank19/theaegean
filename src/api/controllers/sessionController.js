@@ -45,7 +45,7 @@ export const loginUser = async (req, res, next) => {
     // We need new browser standards :(
     res.cookie("refreshToken", tokens.rToken, {
       httpOnly: true,
-      sameSite: "Strict",
+      sameSite: "None",
       maxAge: 365 * 24 * 60 * 60 * 1000,
     });
 
@@ -83,7 +83,11 @@ export const getNewToken = async (req, res, next) => {
       name: decoded.name,
     });
 
-    res.cookie("refreshToken", tokens.rToken, { httpOnly: true });
+    res.cookie("refreshToken", tokens.rToken, {
+      httpOnly: true,
+      sameSite: "None",
+      maxAge: 365 * 24 * 60 * 60 * 1000,
+    });
 
     const payload = {
       id: decoded.id,
