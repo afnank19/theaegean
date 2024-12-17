@@ -3,6 +3,7 @@ import loadRoutes from "./src/config/routeLoader.js";
 import { errorHandler } from "./src/api/middlewares/errorHandler.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { basicLimiter } from "./src/api/middlewares/rateLimiter.js";
 
 //All express initial middleware to go here
 function buildApp() {
@@ -11,6 +12,7 @@ function buildApp() {
   app.use(cors({ origin: "http://localhost:5173", credentials: true }));
   app.use(json());
   app.use(cookieParser());
+  app.use(basicLimiter);
 
   loadRoutes(app);
 
