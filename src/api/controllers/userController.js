@@ -103,7 +103,7 @@ export const registerAUser = async (req, res, next) => {
 
     res.cookie("refreshToken", tokens.rToken, {
       httpOnly: true,
-      sameSite: "Strict",
+      sameSite: "None",
       maxAge: 365 * 24 * 60 * 60 * 1000,
     });
 
