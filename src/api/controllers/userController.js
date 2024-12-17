@@ -99,7 +99,7 @@ export const registerAUser = async (req, res, next) => {
 
     // TODO: Add authentication afterwards with the id with JWTs
     // to send the tokens back to the user [X]
-    const tokens = generateNewTokens(newUserId);
+    const tokens = generateNewTokens({ newUserId, name });
 
     res.cookie("refreshToken", tokens.rToken, {
       httpOnly: true,
@@ -117,7 +117,7 @@ export const registerAUser = async (req, res, next) => {
       r_surf: "okl",
     };
 
-    res.status(201).json(payload);
+    res.json(payload);
   } catch (error) {
     next(error);
   }

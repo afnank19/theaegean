@@ -5,7 +5,7 @@ import sessionRoutes from "../api/routes/sessionRoutes.js";
 import externalRoutes from "../api/routes/externalRoutes.js";
 
 function loadRoutes(app) {
-  app.use("/api", experimentalRoutes);
+  // pp.use("/api", experimentalRoutes);
   app.use("/api/blogs", blogRoutes);
   app.use("/api/users", userRoutes);
   app.use("/api/session", sessionRoutes);

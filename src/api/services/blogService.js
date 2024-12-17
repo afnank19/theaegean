@@ -1,4 +1,4 @@
-import { db } from "../../config/firebaseConfig.js";
+import { adm, db } from "../../config/firebaseConfig.js";
 import { AegeanError } from "../middlewares/errorHandler.js";
 // IMPORTANT REFACTOR:
 // When creating the blog, also set title, author, date, and Time to read
@@ -15,9 +15,8 @@ export const fetchAllBlogs = async (lastDocId, searchQuery, filter) => {
         // Query for search term and filter
         const snapshot = await db
           .collection("blogMeta")
-          .where("title", "==", searchQuery)
+          .where("title", ">=", searchQuery)
           .where("tag", "==", filter)
-          .orderBy("postDate")
           .limit(5)
           .get();
 
@@ -28,8 +27,7 @@ export const fetchAllBlogs = async (lastDocId, searchQuery, filter) => {
       if (searchQuery != undefined) {
         const snapshot = await db
           .collection("blogMeta")
-          .where("title", "==", searchQuery)
-          .orderBy("postDate")
+          .where("title", ">=", searchQuery)
           .limit(5)
           .get();
 
@@ -41,7 +39,7 @@ export const fetchAllBlogs = async (lastDocId, searchQuery, filter) => {
         const snapshot = await db
           .collection("blogMeta")
           .where("tag", "==", filter)
-          .orderBy("postDate")
+          .orderBy("postDate", "desc")
           .limit(5)
           .get();
 
@@ -55,7 +53,7 @@ export const fetchAllBlogs = async (lastDocId, searchQuery, filter) => {
 
       const snapshot = await db
         .collection("blogMeta")
-        .orderBy("postDate")
+        .orderBy("postDate", "desc")
         .limit(5)
         .get();
 
@@ -76,22 +74,21 @@ export const fetchAllBlogs = async (lastDocId, searchQuery, filter) => {
       // Query for search term and filter
       const snapshot = await db
         .collection("blogMeta")
-        .where("title", "==", searchQuery)
+        .where("title", ">=", searchQuery)
         .where("tag", "==", filter)
-        .orderBy("postDate")
         .limit(5)
-        .startAfter(lastDocId)
+        .startAfter(lastDocSnap)
         .get();
 
       result = snapshotMapToResult(snapshot);
+      console.log(result);
       return result;
     }
 
     if (searchQuery != undefined) {
       const snapshot = await db
         .collection("blogMeta")
-        .where("title", "==", searchQuery)
-        .orderBy("postDate")
+        .where("title", ">=", searchQuery)
         .limit(5)
         .startAfter(lastDocSnap)
         .get();
@@ -104,7 +101,7 @@ export const fetchAllBlogs = async (lastDocId, searchQuery, filter) => {
       const snapshot = await db
         .collection("blogMeta")
         .where("tag", "==", filter)
-        .orderBy("postDate")
+        .orderBy("postDate", "desc")
         .limit(5)
         .startAfter(lastDocSnap)
         .get();
@@ -115,7 +112,7 @@ export const fetchAllBlogs = async (lastDocId, searchQuery, filter) => {
 
     const snapshot = await db
       .collection("blogMeta")
-      .orderBy("postDate")
+      .orderBy("postDate", "desc")
       .limit(5)
       .startAfter(lastDocSnap)
       .get();
@@ -148,8 +145,9 @@ export const addBlogData = async (blogContent, blogMeta) => {
       title: blogMeta.title,
       author: blogMeta.author,
       timeToRead: blogMeta.timeToRead,
-      postDate: blogMeta.postDate,
+      displayDate: blogMeta.displayDate,
       content: blogContent,
+      imgUrl: blogMeta.imgUrl,
     };
 
     //blogContent = { blogMetaData, blogContent };
@@ -168,7 +166,8 @@ export const addBlogData = async (blogContent, blogMeta) => {
 
   // This attempts to create the meta document for the collection
   try {
-    blogMeta = { ...blogMeta, blogRef: newBlogContentRef };
+    const postDate = adm.firestore.FieldValue.serverTimestamp();
+    blogMeta = { ...blogMeta, blogRef: newBlogContentRef, postDate: postDate };
     const newDocRef = await db.collection("blogMeta").add(blogMeta);
 
     return { message: "Successfully Posted" };

@@ -21,3 +21,26 @@ export const fetchWorldNews = async () => {
     throw new AegeanError("No news returned", 500);
   }
 };
+
+export const searchImages = async (query) => {
+  try {
+    const response = await fetch(
+      `https://api.pexels.com/v1/search?query=${query}&per_page=9&orientation=landscape`,
+      {
+        headers: {
+          Authorization: process.env.PX_ACCESS,
+        },
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error("Problem fetching images");
+    }
+
+    const data = await response.json();
+
+    return data.photos;
+  } catch (error) {
+    throw new AegeanError("Could not fetch images", 500);
+  }
+};

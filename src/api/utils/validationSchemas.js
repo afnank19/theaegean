@@ -7,15 +7,14 @@ export const testSchema = Joi.object({
 });
 
 export const blogDataSchema = Joi.object({
-  author: Joi.string().required(),
   authorId: Joi.string().required(),
   content: Joi.string().required(),
-  imgUrl: Joi.string().required(),
-  school: Joi.string().required(),
+  imgUrl: Joi.string(),
   teaser: Joi.string().required(),
   timeToRead: Joi.string().required(),
-  postDate: Joi.string().required(),
+  displayDate: Joi.number().required(),
   title: Joi.string().required(),
+  tag: Joi.string().required(),
 });
 
 export const deleteBlogSchema = Joi.object({
