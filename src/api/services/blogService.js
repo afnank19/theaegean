@@ -15,9 +15,8 @@ export const fetchAllBlogs = async (lastDocId, searchQuery, filter) => {
         // Query for search term and filter
         const snapshot = await db
           .collection("blogMeta")
-          .where("title", "==", searchQuery)
+          .where("title", ">=", searchQuery)
           .where("tag", "==", filter)
-          .orderBy("postDate", "desc")
           .limit(5)
           .get();
 
@@ -28,8 +27,7 @@ export const fetchAllBlogs = async (lastDocId, searchQuery, filter) => {
       if (searchQuery != undefined) {
         const snapshot = await db
           .collection("blogMeta")
-          .where("title", "==", searchQuery)
-          .orderBy("postDate", "desc")
+          .where("title", ">=", searchQuery)
           .limit(5)
           .get();
 
@@ -76,9 +74,8 @@ export const fetchAllBlogs = async (lastDocId, searchQuery, filter) => {
       // Query for search term and filter
       const snapshot = await db
         .collection("blogMeta")
-        .where("title", "==", searchQuery)
+        .where("title", ">=", searchQuery)
         .where("tag", "==", filter)
-        .orderBy("postDate", "desc")
         .limit(5)
         .startAfter(lastDocSnap)
         .get();
@@ -91,8 +88,7 @@ export const fetchAllBlogs = async (lastDocId, searchQuery, filter) => {
     if (searchQuery != undefined) {
       const snapshot = await db
         .collection("blogMeta")
-        .where("title", "==", searchQuery)
-        .orderBy("postDate", "desc")
+        .where("title", ">=", searchQuery)
         .limit(5)
         .startAfter(lastDocSnap)
         .get();

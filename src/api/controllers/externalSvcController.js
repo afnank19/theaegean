@@ -1,3 +1,4 @@
+import { AegeanError } from "../middlewares/errorHandler.js";
 import * as externalServiceAccess from "../services/externalService.js";
 
 /**
@@ -12,6 +13,22 @@ export const getWorldNews = async (req, res, next) => {
   try {
     // Await external service layer response
     const response = await externalServiceAccess.fetchWorldNews();
+
+    res.json(response);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getPexelsImages = async (req, res, next) => {
+  try {
+    const query = req.query.query;
+
+    if (query === undefined) {
+      throw new AegeanError("Attempted to get images without search term", 400);
+    }
+
+    const response = await externalServiceAccess.searchImages(query);
 
     res.json(response);
   } catch (error) {
