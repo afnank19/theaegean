@@ -47,6 +47,7 @@ export const loginUser = async (req, res, next) => {
       httpOnly: true,
       sameSite: "None",
       maxAge: 365 * 24 * 60 * 60 * 1000,
+      secure: true,
     });
 
     // TODO: Send AToken directly to the user, not in the cookie [X]
@@ -87,6 +88,7 @@ export const getNewToken = async (req, res, next) => {
       httpOnly: true,
       sameSite: "None",
       maxAge: 365 * 24 * 60 * 60 * 1000,
+      secure: true,
     });
 
     const payload = {
