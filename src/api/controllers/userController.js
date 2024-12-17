@@ -123,3 +123,28 @@ export const registerAUser = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * Updates the about field of the user resource
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+export const updateUserAbout = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+
+    const { about } = req.body;
+
+    if (about === undefined) {
+      throw new AegeanError("No about provided", 400);
+    }
+    // Implement authorization
+    const response = await userService.updateUserAbout(about, userId);
+
+    res.status(201).json(response);
+  } catch (error) {
+    next(error);
+  }
+};

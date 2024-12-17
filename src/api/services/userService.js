@@ -157,3 +157,15 @@ export const validateUserCredentials = async (email) => {
     throw new AegeanError("Couldn't verify email or password", 500);
   }
 };
+
+export const updateUserAbout = async (newAbout, userId) => {
+  try {
+    const userRef = db.collection("user").doc(userId);
+
+    await userRef.update({ about: newAbout });
+
+    return { message: "Updated successfully" };
+  } catch (error) {
+    throw new AegeanError("Couldn't update the requested users about", 500);
+  }
+};
