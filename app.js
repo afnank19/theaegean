@@ -5,11 +5,13 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { basicLimiter } from "./src/api/middlewares/rateLimiter.js";
 
+const DEV_ORIGIN = "http://localhost:5173";
+const PROD_ORIGIN = "https://thesapphire.pages.dev";
 //All express initial middleware to go here
 function buildApp() {
   const app = express();
 
-  app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+  app.use(cors({ origin: PROD_ORIGIN, credentials: true }));
   app.use(json());
   app.use(cookieParser());
   app.use(basicLimiter);
