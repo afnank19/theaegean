@@ -33,3 +33,7 @@ export const registerUserSchema = Joi.object({
   campus: Joi.string().required(),
   cms: Joi.string().required(),
 });
+
+export const updateAboutSchema = Joi.object({
+  about: Joi.string().required(),
+});
