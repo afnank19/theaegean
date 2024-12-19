@@ -57,6 +57,7 @@ export const loginUser = async (req, res, next) => {
     const payload = {
       id: result.id,
       aTkn: tokens.aToken,
+      rTkn: tokens.rToken,
       r_surf: "okl",
     };
 
@@ -94,6 +95,7 @@ export const getNewToken = async (req, res, next) => {
     const payload = {
       id: decoded.id,
       aTkn: tokens.aToken,
+      rTkn: tokens.rToken,
     };
 
     res.json(payload);
