@@ -4,11 +4,11 @@ import { AegeanError } from "../middlewares/errorHandler.js";
 
 export const createAndSignTokens = (payload) => {
   const aToken = jwt.sign(payload, process.env.A_TOKEN_KEY, {
-    expiresIn: "5min",
+    expiresIn: "30min",
   });
 
   const rToken = jwt.sign(payload, process.env.R_TOKEN_KEY, {
-    expiresIn: "30min",
+    expiresIn: "10d",
   });
 
   return { aToken, rToken };

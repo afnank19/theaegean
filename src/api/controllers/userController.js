@@ -115,6 +115,7 @@ export const registerAUser = async (req, res, next) => {
     const payload = {
       id: newUserId,
       aTkn: tokens.aToken,
+      rTkn: tokens.rTkn,
       r_surf: "okl",
     };
 

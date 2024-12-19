@@ -29,6 +29,7 @@ export const checkUserAuthBasic = (req, res, next) => {
 // Specific for GET /session endpoint
 export const checkUserSessionAuth = (req, res, next) => {
   const refreshToken = req.cookies.refreshToken;
+  const rToken = req.headers.authorization.split(" ")[1];
   const _c_hdr = req.headers["x-1time-tkn"];
 
   try {
@@ -41,7 +42,7 @@ export const checkUserSessionAuth = (req, res, next) => {
       throw new AegeanError("Couldn't verify request credentials", 401);
     }
 
-    const decoded = jwt.verify(refreshToken, process.env.R_TOKEN_KEY);
+    const decoded = jwt.verify(rToken, process.env.R_TOKEN_KEY);
 
     next();
   } catch (error) {
@@ -56,12 +57,14 @@ export const checkUserSessionAuth = (req, res, next) => {
 // Specific for GET /token
 export const checkUserRefreshAuth = (req, res, next) => {
   const refreshToken = req.cookies.refreshToken;
+  const rToken = req.headers.authorization.split(" ")[1];
+
   const _r_surf = req.headers["x-surf"];
 
   try {
     validateSurf(_r_surf);
 
-    const decoded = jwt.verify(refreshToken, process.env.R_TOKEN_KEY);
+    const decoded = jwt.verify(rToken, process.env.R_TOKEN_KEY);
 
     next();
   } catch (error) {
