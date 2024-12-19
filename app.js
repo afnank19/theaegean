@@ -12,7 +12,7 @@ const MOBILE_DEV_ORIGIN = process.env.MOBILE_DEV;
 function buildApp() {
   const app = express();
 
-  app.use(cors({ origin: DEV_ORIGIN, credentials: true }));
+  app.use(cors({ origin: PROD_ORIGIN, credentials: true }));
   app.use(json());
   app.use(cookieParser());
   app.use(basicLimiter);
