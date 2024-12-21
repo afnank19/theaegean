@@ -14,7 +14,7 @@ function buildApp() {
   const app = express();
 
   app.use(cors({ origin: PROD_ORIGIN, credentials: true }));
-  app.use(compression);
+  app.use(compression());
   app.use(json());
   app.use(cookieParser());
   app.use(basicLimiter);
