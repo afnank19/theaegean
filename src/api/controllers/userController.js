@@ -151,6 +151,14 @@ export const updateUserAbout = async (req, res, next) => {
   }
 };
 
+/**
+ * Gets userId from the params, lastDocId from the query, and calls
+ * the blog service function to fetch blogs and returns them
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
 export const getBlogsByUser = async (req, res, next) => {
   try {
     const userId = req.params.id;
