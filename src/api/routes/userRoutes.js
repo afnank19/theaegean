@@ -22,11 +22,20 @@ router.route("/:id").get(checkUserAuthBasic, userController.getAUser);
 
 router
   .route("/:id/about")
-  .patch(validateRequest(updateAboutSchema), userController.updateUserAbout);
+  .patch(
+    checkUserAuthBasic,
+    validateRequest(updateAboutSchema),
+    userController.updateUserAbout,
+  );
 
 // /api/users/[userID]/saves
 router
   .route("/:id/saves")
   .get(checkUserAuthBasic, userController.getUserSavedBlogs);
+
+// /api/users/[userID]/blogs
+router
+  .route("/:id/blogs")
+  .get(checkUserAuthBasic, userController.getBlogsByUser);
 
 export default router;

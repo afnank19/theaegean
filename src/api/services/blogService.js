@@ -217,3 +217,50 @@ export const deleteBlogData = async (blogMetaId, blogContentId) => {
     throw new AegeanError("Error deleting blog data", 500);
   }
 };
+
+export const fetchUserBlogs = async (userId, lastDocId) => {
+  if (lastDocId == undefined) {
+    try {
+      const snapshot = await db
+        .collection("blogMeta")
+        .where("authorId", "==", userId)
+        .orderBy("postDate", "desc")
+        .limit(5)
+        .get();
+
+      const result = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      return result;
+    } catch (error) {
+      throw new AegeanError("Failed to fetch users saved blogs", 500);
+    }
+  }
+
+  const lastDocSnap = await db.collection("blogMeta").doc(lastDocId).get();
+
+  try {
+    const snapshot = await db
+      .collection("blogMeta")
+      .where("authorId", "==", userId)
+      .orderBy("postDate", "desc")
+      .limit(5)
+      .startAfter(lastDocSnap)
+      .get();
+
+    if (snapshot.empty) {
+      return [];
+    }
+
+    const result = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    return result;
+  } catch (error) {
+    throw new AegeanError("Failed to fetch blogs posted by user", 500);
+  }
+};

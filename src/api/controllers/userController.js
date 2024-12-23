@@ -2,6 +2,7 @@ import { AegeanError } from "../middlewares/errorHandler.js";
 import * as userService from "../services/userService.js";
 import { generateNewTokens } from "../services/sessionService.js";
 import { generateHashAndSalt } from "../utils/authHelpers.js";
+import { fetchUserBlogs } from "../services/blogService.js";
 
 // This functionality may be removed
 export const getAllUsers = async (req, res, next) => {
@@ -115,7 +116,7 @@ export const registerAUser = async (req, res, next) => {
     const payload = {
       id: newUserId,
       aTkn: tokens.aToken,
-      rTkn: tokens.rTkn,
+      rTkn: tokens.rToken,
       r_surf: "okl",
     };
 
@@ -145,6 +146,28 @@ export const updateUserAbout = async (req, res, next) => {
     const response = await userService.updateUserAbout(about, userId);
 
     res.status(201).json(response);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Gets userId from the params, lastDocId from the query, and calls
+ * the blog service function to fetch blogs and returns them
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+export const getBlogsByUser = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+
+    const lastDocId = req.query.lastDocId;
+
+    const result = await fetchUserBlogs(userId, lastDocId);
+
+    res.json(result);
   } catch (error) {
     next(error);
   }

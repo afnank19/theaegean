@@ -11,7 +11,7 @@ async function bootServer(PORT) {
 
   return app.listen(PORT, () => {
     console.log(process.env.FIREBASE_PROJECT_ID);
-    console.log(`Server is up on http://localhost:${PORT}`);
+    console.log(`Server is up on ${PORT}`);
   });
 }
 
