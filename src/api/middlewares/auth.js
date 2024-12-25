@@ -4,6 +4,12 @@ import { AegeanError } from "./errorHandler.js";
 // For all resource reqs
 export const checkUserAuthBasic = (req, res, next) => {
   try {
+    const authHeader = req.headers["authorization"];
+
+    if (!authHeader) {
+      throw new AegeanError("Unauthorized", 401);
+    }
+
     const accessToken = req.headers.authorization.split(" ")[1];
 
     if (accessToken === undefined) {

@@ -1,5 +1,13 @@
 export const imgUrlValidator = (imgUrl) => {
-  if (!imgUrl.contains("https://images.pexels.com/photos")) {
+  const testUrl = new URL(imgUrl);
+
+  if (testUrl.origin !== "https://images.pexels.com") {
     return false;
   }
+
+  if (testUrl.protocol !== "https:") {
+    return false;
+  }
+
+  return true;
 };
