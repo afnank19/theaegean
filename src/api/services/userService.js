@@ -21,6 +21,13 @@ export const fetchAUser = async (userId) => {
 
     const userData = snapshot.data();
 
+    if (snapshot.empty) {
+      throw new AegeanError(
+        "An error occured while fetching, check you ID perhaps?",
+        500,
+      );
+    }
+
     // Only send the data that is needed
     const user = {
       name: userData.name,

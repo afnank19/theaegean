@@ -6,19 +6,37 @@ export const testSchema = Joi.object({
   username: Joi.string().required(),
 });
 
+const allowedTags = [
+  "Lifestyle",
+  "Technology",
+  "Health",
+  "Business",
+  "Food",
+  "Education",
+  "Entertainment",
+  "Creativity",
+  "Environment",
+  "Relationships",
+  "News",
+  "Travel",
+  "Interests",
+  "Other",
+];
 export const blogDataSchema = Joi.object({
-  authorId: Joi.string().required(),
+  authorId: Joi.string().length(20).required(),
   content: Joi.string().required(),
   imgUrl: Joi.string(),
-  teaser: Joi.string().required(),
+  teaser: Joi.string().max(125).required(),
   timeToRead: Joi.string().required(),
   displayDate: Joi.number().required(),
-  title: Joi.string().required(),
-  tag: Joi.string().required(),
+  title: Joi.string().max(70).required(),
+  tag: Joi.string()
+    .valid(...allowedTags)
+    .required(),
 });
 
 export const deleteBlogSchema = Joi.object({
-  blogContentId: Joi.string().required(),
+  blogContentId: Joi.string().length(20).required(),
 });
 
 export const loginSchema = Joi.object({
@@ -27,7 +45,7 @@ export const loginSchema = Joi.object({
 });
 
 export const registerUserSchema = Joi.object({
-  name: Joi.string().required(),
+  name: Joi.string().max(50).min(2).required(),
   email: Joi.string().required(),
   password: Joi.string().required(),
   campus: Joi.string().required(),
@@ -35,5 +53,5 @@ export const registerUserSchema = Joi.object({
 });
 
 export const updateAboutSchema = Joi.object({
-  about: Joi.string().required(),
+  about: Joi.string().max(160).required(),
 });

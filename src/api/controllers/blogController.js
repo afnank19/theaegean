@@ -1,6 +1,7 @@
 import { AegeanError } from "../middlewares/errorHandler.js";
 import * as blogService from "../services/blogService.js";
 import jwt from "jsonwebtoken";
+import { imgUrlValidator } from "../utils/helpers.js";
 
 /**
  * Can have lastDocId, searchQuery, filter or not. Fetches the blogs from the service
@@ -64,6 +65,10 @@ export const postBlog = async (req, res, next) => {
         "Unauthorized post attempt, please check your credentials",
         401,
       );
+    }
+
+    if (!imgUrlValidator(imgUrl)) {
+      throw new AegeanError("Bad image", 400);
     }
 
     const author = decoded.name;

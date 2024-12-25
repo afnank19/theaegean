@@ -22,7 +22,7 @@ const cycleNewsInDb = async () => {
 async function getNews() {
   try {
     const response = await fetch(
-      `https://api.nytimes.com/svc/topstories/v2/world.json?api-key=${process.env.NYTIMES_ACCESS}`
+      `https://api.nytimes.com/svc/topstories/v2/world.json?api-key=${process.env.NYTIMES_ACCESS}`,
     );
 
     if (!response.ok) {
@@ -43,10 +43,10 @@ async function getNews() {
       news.push(articleMetaData);
     }
 
-    console.log(news);
+    // console.log(news);
     return news;
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return null;
   }
 }
@@ -69,7 +69,7 @@ async function deleteExistingNews() {
 
     return true;
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return false;
   }
 }
