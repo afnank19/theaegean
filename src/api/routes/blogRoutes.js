@@ -18,7 +18,7 @@ router
   .post(
     checkUserAuthBasic,
     validateRequest(blogDataSchema),
-    blogController.postBlog
+    blogController.postBlog,
   );
 
 // this represents the enpoint : /api/blogs/:id
@@ -28,7 +28,7 @@ router
   .delete(
     checkUserAuthBasic,
     validateRequest(deleteBlogSchema),
-    blogController.deleteABlog
+    blogController.deleteABlog,
   );
 
 export default router;

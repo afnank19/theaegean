@@ -15,9 +15,10 @@ export const validateRequest = (schema) => {
       // Throw an error here;
       // Probably pass it to error middleware
       const err = new AegeanError(
-        "Missing options for the current action",
-        400
+        "The request did not meet specified requirements for the fields",
+        400,
       );
+
       return next(err);
 
       // Temporary
