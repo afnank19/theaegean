@@ -55,3 +55,9 @@ export const registerUserSchema = Joi.object({
 export const updateAboutSchema = Joi.object({
   about: Joi.string().max(160).required(),
 });
+
+export const commentSchema = Joi.object({
+  authorId: Joi.string().required(),
+  displayDate: Joi.number().required(),
+  comment: Joi.string().max(160).required(),
+});
