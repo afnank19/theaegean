@@ -24,8 +24,12 @@ router
 
 router
   .route("/:id/comments")
-  .get(blogController.getComments)
-  .post(validateRequest(commentSchema), blogController.postAComment);
+  .get(checkUserAuthBasic, blogController.getComments)
+  .post(
+    checkUserAuthBasic,
+    validateRequest(commentSchema),
+    blogController.postAComment,
+  );
 
 // this represents the enpoint : /api/blogs/:id
 router
