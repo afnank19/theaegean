@@ -4,6 +4,7 @@ import { validateRequest } from "../middlewares/validateRequest.js";
 import { checkUserAuthBasic } from "../middlewares/auth.js";
 import {
   blogDataSchema,
+  commentSchema,
   deleteBlogSchema,
 } from "../utils/validationSchemas.js";
 
@@ -20,6 +21,11 @@ router
     validateRequest(blogDataSchema),
     blogController.postBlog,
   );
+
+router
+  .route("/:id/comments")
+  .get(blogController.getComments)
+  .post(validateRequest(commentSchema), blogController.postAComment);
 
 // this represents the enpoint : /api/blogs/:id
 router

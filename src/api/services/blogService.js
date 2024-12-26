@@ -264,3 +264,82 @@ export const fetchUserBlogs = async (userId, lastDocId) => {
     throw new AegeanError("Failed to fetch blogs posted by user", 500);
   }
 };
+
+export const fetchComments = async (blogContentId, lastDocId) => {
+  if (lastDocId === undefined) {
+    try {
+      const snapshot = await db
+        .collection("blogContent")
+        .doc(blogContentId)
+        .collection("comments")
+        .orderBy("postDate", "desc")
+        .limit(5)
+        .get();
+
+      if (snapshot.empty) {
+        return [];
+      }
+
+      const result = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      return result;
+    } catch (error) {
+      console.log(error);
+      throw new AegeanError("Could not fetch comments", 500);
+    }
+  }
+
+  const lastDocSnap = await db
+    .collection("blogContent")
+    .doc(blogContentId)
+    .collection("comments")
+    .doc(lastDocId)
+    .get();
+
+  try {
+    const snapshot = await db
+      .collection("blogContent")
+      .doc(blogContentId)
+      .collection("comments")
+      .orderBy("postDate", "desc")
+      .limit(5)
+      .startAfter(lastDocSnap)
+      .get();
+
+    if (snapshot.empty) {
+      return [];
+    }
+
+    const result = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    return result;
+  } catch (error) {
+    console.log(error);
+    throw new AegeanError("Could not fetch comments", 500);
+  }
+};
+
+export const addComment = async (blogContentId, comment) => {
+  try {
+    const postDate = adm.firestore.FieldValue.serverTimestamp();
+
+    const commentObj = { ...comment, postDate: postDate };
+
+    await db
+      .collection("blogContent")
+      .doc(blogContentId)
+      .collection("comments")
+      .add(commentObj);
+
+    return { message: "Successfully Posted" };
+  } catch (error) {
+    console.log(error);
+    throw new AegeanError("An error occured while posting commments", 500);
+  }
+};

@@ -143,3 +143,41 @@ export const deleteABlog = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getComments = async (req, res, next) => {
+  try {
+    const blogContentId = req.params.id;
+    const lastDocId = req.query.lastDocId; // can be undefined
+
+    const result = await blogService.fetchComments(blogContentId, lastDocId); // call blog service
+
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const postAComment = async (req, res, next) => {
+  try {
+    const blogContentId = req.params.id;
+
+    const { authorId, displayDate, comment } = req.body;
+
+    const accessToken = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(accessToken, process.env.A_TOKEN_KEY);
+    const author = decoded.name;
+
+    const commentObj = {
+      author: author,
+      authorId: authorId,
+      displayDate: displayDate,
+      comment: comment,
+    };
+
+    const result = await blogService.addComment(blogContentId, commentObj);
+
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
