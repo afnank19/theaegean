@@ -161,6 +161,7 @@ export const validateUserCredentials = async (email) => {
 
     return userCredentials;
   } catch (error) {
+    console.log(error)
     throw new AegeanError("Couldn't verify email or password", 500);
   }
 };

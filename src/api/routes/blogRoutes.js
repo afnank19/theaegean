@@ -24,7 +24,7 @@ router
 
 router
   .route("/:id/comments")
-  .get(checkUserAuthBasic, blogController.getComments)
+  .get(blogController.getComments)
   .post(
     checkUserAuthBasic,
     validateRequest(commentSchema),
@@ -34,7 +34,7 @@ router
 // this represents the enpoint : /api/blogs/:id
 router
   .route("/:id")
-  .get(checkUserAuthBasic, blogController.getABlog)
+  .get(blogController.getABlog)
   .delete(
     checkUserAuthBasic,
     validateRequest(deleteBlogSchema),
